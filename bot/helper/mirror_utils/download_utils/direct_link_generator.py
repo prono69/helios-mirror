@@ -76,7 +76,7 @@ def direct_link_generator(link: str):
     elif 'krakenfiles.com' in link:
         return krakenfiles(link)
     elif "mdisk" in link:
-        return mdisk_ddl(link)    
+        return mdisk(link)    
     elif is_gdtot_link(link):
         return gdtot(link)
     elif any(x in link for x in fmed_list):
@@ -468,7 +468,7 @@ def appdrive(url: str) -> str:
     else:
         raise DirectDownloadLinkException(f"{info_parsed['error_message']}")
         
-        
+"""        
 def mdis_k(urlx):
     scraper = cloudscraper.create_scraper(interpreter="nodejs", allow_brotli=False)
     headers = {
@@ -485,8 +485,7 @@ def mdis_k(urlx):
 
 
 def mdisk_ddl(url: str) -> str:
-    """MDisk DDL link generator
-    By https://github.com/dishapatel010"""
+    "MDisk DDL link generator By https://github.com/dishapatel010"
 
     check = re_findall(r"\bhttps?://.*mdisk\S+", url)
     if not check:
@@ -505,3 +504,20 @@ def mdisk_ddl(url: str) -> str:
         except ValueError:
             textx = f"The content is deleted."
             return
+"""
+            
+def mdisk(url):
+    api = "https://api.emilyx.in/api"
+    client = cloudscraper.create_scraper(allow_brotli=False)
+    resp = client.get(url)
+    if resp.status_code == 404:
+        return "File not found/The link you entered is wrong!"
+    try:
+        resp = client.post(api, json={"type": "mdisk", "url": url})
+        res = resp.json()
+    except BaseException:
+        return "API UnResponsive / Invalid Link!"
+    if res["success"] is True:
+        return res["url"]
+    else:
+        return res["msg"]            
