@@ -118,6 +118,23 @@ def get_progress_bar_string(status):
     p_str = f"[{p_str}]"
     return p_str
 
+def progress_bar(percentage):
+    p_used = '⬢'
+    p_total = '⬡'
+    s_progress = ''
+    if isinstance(percentage, str):
+        return 'NaN'
+    try:
+        percentage=int(percentage)
+    except:
+        percentage = 0
+    for i in range(1,11):
+        if i <= int(percentage/10):
+            s_progress += p_used
+        else:
+            s_progress += p_total
+    return s_progress
+    
 def get_readable_message():
     with download_dict_lock:
         msg = ""
@@ -327,13 +344,17 @@ def bot_sys_stats():
        if stats.status() == MirrorStatus.STATUS_SPLITTING:
                 num_split += 1
     stats = f"""
-BOT UPTIME: {currentTime}\n
-CPU : {cpu}% || RAM : {mem_p}%\n
-USED : {used} || FREE :{free}
-SENT : {sent} || RECV : {recv}\n
-ONGOING TASKS:
-DL: {num_active} || UP : {num_upload} || SPLIT : {num_split}
-ZIP : {num_archi} || UNZIP : {num_extract} || TOTAL : {tasks} 
+BOT SYSTEM STATS
+
+CPU:  {progress_bar(cpu)} {cpu}%
+RAM: {progress_bar(mem_p)} {mem_p}%
+DISK: {progress_bar(disk)} {disk}%
+T: {total}GB | F: {free}GB
+
+Working For: {currentTime}
+DL: {recv} | UL: {sent}
+
+Made with ❤️ by Nikita
 """
     return stats
 dispatcher.add_handler(
